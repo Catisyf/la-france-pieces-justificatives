@@ -8,13 +8,13 @@ This is a small-scale data product MVP — and a deeply personal one. I had a lo
 
 ## 🧰 Tech Stack
 
-🗃️ Google Docs API (poem ingestion)
-🐍 Python + Poetry
-🤗 Hugging Face Transformers (emoji classification)
-🤖 OpenAI API (GPT-4 LLM analysis)
-☁️ Google Cloud Storage (data IO)
-🖥️ Streamlit (UI)
-🐳 Docker + 🌐 Cloud Run (deployment)
+- 🗃️ **Google Docs API** – poem ingestion  
+- 🐍 **Python + Poetry**  
+- 🤗 **Hugging Face Transformers** – emoji classification  
+- 🤖 **OpenAI API** – GPT-4 LLM analysis  
+- ☁️ **Google Cloud Storage** – data IO  
+- 🖥️ **Streamlit** – UI  
+- 🐳 **Docker** + 🌐 **Cloud Run** – deployment  
 
 
 ## 🧠 System Architecture
