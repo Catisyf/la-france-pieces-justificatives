@@ -17,7 +17,11 @@ THEME_EMOJIS = {
     "Existential Conundrums": "🌀",
     "Work-Life Balance and Professional Challenges": "💼",
     "Coping with Reality": "🧠",
-    "Life and Death": "🌸"
+    "Life and Death": "🪦"
+}
+
+LOW_CONFIDENCE_EMOJIS = {
+    "document_egare_n2",
 }
 
 st.set_page_config(page_title="Poetic Interpreter", layout="wide")
@@ -84,11 +88,12 @@ llm_output, emoji_output, llm_path = load_latest_outputs()
 poems = get_poems()
 
 # === Header ===
-st.markdown("# 📖 Poetic Interpreter")
+st.markdown("# 📖 Poetry Decoded")
 st.caption(f"LLM output: `{llm_path.split('/')[-1]}`")
 
 # === Thematic Groupings ===
 st.markdown("## 📚 Thematic Groupings")
+st.markdown("_Generated using `OpenAI's GPT-4` model_")
 
 def extract_markdown_categories(raw):
     pattern = r"\*\*Category \d+: (.*?)\*\*\n(.*?)(?=\n\*\*Category \d+:|$)"
@@ -108,6 +113,8 @@ if llm_output and "categories" in llm_output:
 
 # === GPT's Favorite Poems ===
 st.markdown("## 🏆 GPT's Favorite Poems")
+st.markdown("_Selected using `OpenAI's GPT-4` model_")
+
 favorites = llm_output.get("favorites", "")
 lines = [l.strip() for l in favorites.split("\n") if l.strip()]
 emoji_map = {1: "🥇", 2: "🥈", 3: "🥉"}
@@ -120,10 +127,18 @@ for i, line in enumerate(lines[:3]):
 
 # === Emoji Reactions ===
 st.markdown("## 🎭 Emoji Reactions")
+st.markdown("_Predicted using `joeddav/distilbert-base-uncased-go-emotions-student` model_")
+
 for poem in poems:
     if poem.get("language") == "en":
-        emoji = emoji_output.get(poem["slug"], {}).get("emoji", "❓")
-        st.markdown(f"- **{poem['title']}** — {emoji}")
+        slug = poem["slug"]
+        title = poem["title"]
+        emoji = emoji_output.get(slug, {}).get("emoji", "❓")
+
+        if slug in LOW_CONFIDENCE_EMOJIS:
+            st.markdown(f"- **{title}** — {emoji} ⚠️ _low confidence_")
+        else:
+            st.markdown(f"- **{title}** — {emoji}")
 
 # === Poll ===
 st.markdown("## 🗳️ Cast Your Vote")
