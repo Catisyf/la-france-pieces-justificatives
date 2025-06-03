@@ -93,7 +93,7 @@ st.caption(f"LLM output: `{llm_path.split('/')[-1]}`")
 
 # === Thematic Groupings ===
 st.markdown("## 📚 Thematic Groupings")
-st.markdown("_Generated using `OpenAI's GPT-4` model_")
+st.markdown("_**Medium confidence**: Generated using `OpenAI's GPT-4` model_")
 
 def extract_markdown_categories(raw):
     pattern = r"\*\*Category \d+: (.*?)\*\*\n(.*?)(?=\n\*\*Category \d+:|$)"
@@ -113,7 +113,7 @@ if llm_output and "categories" in llm_output:
 
 # === GPT's Favorite Poems ===
 st.markdown("## 🏆 GPT's Favorite Poems")
-st.markdown("_Selected using `OpenAI's GPT-4` model_")
+st.markdown("_**To each their own**: Selected using `OpenAI's GPT-4` model_")
 
 favorites = llm_output.get("favorites", "")
 lines = [l.strip() for l in favorites.split("\n") if l.strip()]
@@ -126,8 +126,8 @@ for i, line in enumerate(lines[:3]):
         st.markdown(f"{emoji_map[i+1]} **{title}**  \n{desc}")
 
 # === Emoji Reactions ===
-st.markdown("## 🎭 Emoji Reactions")
-st.markdown("_Predicted using `joeddav/distilbert-base-uncased-go-emotions-student` model_")
+st.markdown("## 🎭 Emoji Only - English Poems")
+st.markdown("_**Second guessed**: Predicted using `joeddav/distilbert-base-uncased-go-emotions-student` model_")
 
 for poem in poems:
     if poem.get("language") == "en":
@@ -145,7 +145,7 @@ st.markdown("## 🗳️ Cast Your Vote")
 
 title_lookup = {p['title']: p['slug'] for p in poems}
 selected = st.multiselect(
-    "Pick up to **three** poems you connected with most",
+    "**Forget the models. Trust your read**. pick up to **three** poems that spoke to you most:",
     options=list(title_lookup.keys()),
     max_selections=3,
     placeholder="Select up to 3..."
