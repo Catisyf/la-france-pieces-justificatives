@@ -1,0 +1,34 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+
+# Virtualenvs
+.env
+.venv/
+venv/
+env/
+*.env
+
+# Poetry
+# Keep poetry.lock for reproducibility
+# DO NOT ignore poetry.lock
+
+# Logs
+*.log
+logs/
+
+# Editor settings
+.vscode/
+.idea/
+
+# macOS
+.DS_Store
+
+# Secrets and credentials
+secrets/
+*.json
+
+# GCP
+*.key.json
+*.service_account.json

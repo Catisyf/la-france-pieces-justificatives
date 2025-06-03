@@ -1,0 +1,36 @@
+name: Poetry NLP App CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+jobs:
+  lint-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.12"
+
+      - name: Install Poetry
+        uses: abatilo/actions-poetry@v2
+        with:
+          poetry-version: "2.1.3"
+
+      - name: Install dependencies
+        run: poetry install
+
+      - name: Run black (check only)
+        run: poetry run black . --check
+
+      - name: Run ruff
+        run: poetry run ruff .
+
+      - name: Run pytest
+        run: poetry run pytest
