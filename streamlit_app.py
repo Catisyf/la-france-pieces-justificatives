@@ -87,71 +87,94 @@ def get_poems():
 llm_output, emoji_output, llm_path = load_latest_outputs()
 poems = get_poems()
 
-# === Header ===
-st.markdown("# 📖 Poetry Decoded")
-st.caption(f"LLM output: `{llm_path.split('/')[-1]}`")
+# === Tabbed Interface ===
+tab1, tab2 = st.tabs(["📝 Poetry Collection", "🤖 LLM Analysis"])
 
-# === Thematic Groupings ===
-st.markdown("## 📚 Thematic Groupings")
-st.markdown("_**Medium confidence**: Generated using `OpenAI's GPT-4` model_")
+# === Tab 1: Poetry Collection (Substack embed) ===
+with tab1:
+    st.markdown("## 📰 Poetry Collection")
+    col1, col2 = st.columns([1.2, 2])
+    with col1:
+        st.image("graphics/poster.jpg", output_format="auto", width=400)
 
-def extract_markdown_categories(raw):
-    pattern = r"\*\*Category \d+: (.*?)\*\*\n(.*?)(?=\n\*\*Category \d+:|$)"
-    matches = re.findall(pattern, raw, re.DOTALL)
-    return [{"title": m[0].strip(), "description": m[1].strip()} for m in matches]
+    with col2:
+        st.markdown("""
+        <div style='margin-top: 0.5rem;'>
+            <h4 style='margin-bottom: 0.5rem;'>La France — <em>pièces justificatives</em></h4>
+            <p style='font-size: 16px; line-height: 1.6;'>
+            Born out of exam prep, morphed into reflections on language, identity, and belonging.
+            </p>
+            <p style='margin-top: 1rem; font-weight: bold;'>
+            👉 <a href='https://yifeic.substack.com/p/la-france-pieces-justificatives' target='_blank' style='color:#0066cc;'>Read the Full Collection on Substack</a>
+            </p>
+        </div>
+        """, unsafe_allow_html=True)
+# === Tab 2: LLM Analysis ===
+with tab2:
+    st.markdown("# 📖 Poetry Decoded")
+    st.caption(f"LLM output: `{llm_path.split('/')[-1]}`")
 
-if llm_output and "categories" in llm_output:
-    raw = llm_output["categories"]
-    themes = extract_markdown_categories(raw)
+    # === Thematic Groupings ===
+    st.markdown("## 📚 Thematic Groupings")
+    st.markdown("_**Medium confidence**: Generated using `OpenAI's GPT-4` model_")
 
-    rows = [themes[i:i+2] for i in range(0, len(themes), 2)]
-    for row in rows:
-        cols = st.columns(2)
-        for col, theme in zip(cols, row):
-            emoji = THEME_EMOJIS.get(theme["title"], "🧩")
-            col.markdown(f"<div class='card-box'><h4>{emoji} {theme['title']}</h4><p>{theme['description']}</p></div>", unsafe_allow_html=True)
+    def extract_markdown_categories(raw):
+        pattern = r"\*\*Category \d+: (.*?)\*\*\n(.*?)(?=\n\*\*Category \d+:|$)"
+        matches = re.findall(pattern, raw, re.DOTALL)
+        return [{"title": m[0].strip(), "description": m[1].strip()} for m in matches]
 
-# === GPT's Favorite Poems ===
-st.markdown("## 🏆 GPT's Favorite Poems")
-st.markdown("_**To each their own**: Selected using `OpenAI's GPT-4` model_")
+    if llm_output and "categories" in llm_output:
+        raw = llm_output["categories"]
+        themes = extract_markdown_categories(raw)
 
-favorites = llm_output.get("favorites", "")
-lines = [l.strip() for l in favorites.split("\n") if l.strip()]
-emoji_map = {1: "🥇", 2: "🥈", 3: "🥉"}
+        rows = [themes[i:i+2] for i in range(0, len(themes), 2)]
+        for row in rows:
+            cols = st.columns(2)
+            for col, theme in zip(cols, row):
+                emoji = THEME_EMOJIS.get(theme["title"], "🧩")
+                col.markdown(f"<div class='card-box'><h4>{emoji} {theme['title']}</h4><p>{theme['description']}</p></div>", unsafe_allow_html=True)
 
-for i, line in enumerate(lines[:3]):
-    match = re.match(r"\d+\.\s*(.+?):\s*(.+)", line)
-    if match:
-        title, desc = match.groups()
-        st.markdown(f"{emoji_map[i+1]} **{title}**  \n{desc}")
+    # === GPT's Favorite Poems ===
+    st.markdown("## 🏆 GPT's Favorite Poems")
+    st.markdown("_**To each their own**: Selected using `OpenAI's GPT-4` model_")
 
-# === Emoji Reactions ===
-st.markdown("## 🎭 Emoji Only - English Poems")
-st.markdown("_**Second guessed**: Predicted using `joeddav/distilbert-base-uncased-go-emotions-student` model_")
+    favorites = llm_output.get("favorites", "")
+    lines = [l.strip() for l in favorites.split("\n") if l.strip()]
+    emoji_map = {1: "🥇", 2: "🥈", 3: "🥉"}
 
-for poem in poems:
-    if poem.get("language") == "en":
-        slug = poem["slug"]
-        title = poem["title"]
-        emoji = emoji_output.get(slug, {}).get("emoji", "❓")
+    for i, line in enumerate(lines[:3]):
+        match = re.match(r"\d+\.\s*(.+?):\s*(.+)", line)
+        if match:
+            title, desc = match.groups()
+            st.markdown(f"{emoji_map[i+1]} **{title}**  \n{desc}")
 
-        if slug in LOW_CONFIDENCE_EMOJIS:
-            st.markdown(f"- **{title}** — {emoji} ⚠️ _low confidence_")
-        else:
-            st.markdown(f"- **{title}** — {emoji}")
+    # === Emoji Reactions ===
+    st.markdown("## 🎭 Emoji Only - English Poems")
+    st.markdown("_**Second guessed**: Predicted using `joeddav/distilbert-base-uncased-go-emotions-student` model_")
 
-# === Poll ===
-st.markdown("## 🗳️ Cast Your Vote")
+    for poem in poems:
+        if poem.get("language") == "en":
+            slug = poem["slug"]
+            title = poem["title"]
+            emoji = emoji_output.get(slug, {}).get("emoji", "❓")
 
-title_lookup = {p['title']: p['slug'] for p in poems}
-selected = st.multiselect(
-    "**Forget the models. Trust your read**. pick up to **three** poems that spoke to you most:",
-    options=list(title_lookup.keys()),
-    max_selections=3,
-    placeholder="Select up to 3..."
-)
+            if slug in LOW_CONFIDENCE_EMOJIS:
+                st.markdown(f"- **{title}** — {emoji} ⚠️ _low confidence_")
+            else:
+                st.markdown(f"- **{title}** — {emoji}")
 
-if selected:
-    st.success("Thanks for voting!")
-    for title in selected:
-        st.markdown(f"- **{title}**")
+    # === Poll ===
+    st.markdown("## 🗳️ Cast Your Vote")
+
+    title_lookup = {p['title']: p['slug'] for p in poems}
+    selected = st.multiselect(
+        "**Forget the models. Trust your read**. pick up to **three** poems that spoke to you most:",
+        options=list(title_lookup.keys()),
+        max_selections=3,
+        placeholder="Select up to 3..."
+    )
+
+    if selected:
+        st.success("Thanks for voting!")
+        for title in selected:
+            st.markdown(f"- **{title}**")
