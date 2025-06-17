@@ -8,8 +8,7 @@ import re
 
 # basic logging config
 logging.basicConfig(
-    level=logging.INFO,
-    format="%(asctime)s [%(levelname)s] %(message)s"
+    level=logging.INFO, format="%(asctime)s [%(levelname)s] %(message)s"
 )
 logger = logging.getLogger(__name__)
 
@@ -28,7 +27,11 @@ class GDocsImporter:
         return build("docs", "v1", credentials=creds)
 
     def _normalize_title(self, title: str) -> str:
-        title_str = unicodedata.normalize("NFKD", title).encode("ascii", "ignore").decode("utf-8")
+        title_str = (
+            unicodedata.normalize("NFKD", title)
+            .encode("ascii", "ignore")
+            .decode("utf-8")
+        )
         title_str = title_str.lower().strip()
         title_str = title_str.replace("°", "no").replace(" ", "_")
         return title_str
@@ -37,7 +40,7 @@ class GDocsImporter:
         """Download the Google Doc content."""
         return self.service.documents().get(documentId=doc_id).execute()
 
-    def parse_google_doc(self, document: dict) -> list[dict]: 
+    def parse_google_doc(self, document: dict) -> list[dict]:
         content = document.get("body", {}).get("content", [])
         poems = []
         current_poem = {}
@@ -72,7 +75,7 @@ class GDocsImporter:
                     body_lines = []
                 current_poem = {
                     "title": full_line,
-                    "slug": self._normalize_title(full_line)
+                    "slug": self._normalize_title(full_line),
                 }
                 expecting_date = True
                 collecting_body = False
@@ -101,7 +104,7 @@ class GDocsImporter:
             except LangDetectException:
                 current_poem["language"] = "unknown"
             poems.append(current_poem)
-        
+
         logger.info(f"{len(poems)} poems parsed.")
         logger.info(f"{poems[0]} poems parsed.")
 

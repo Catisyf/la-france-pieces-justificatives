@@ -5,14 +5,12 @@ from google.cloud import storage
 
 # basic logging config
 logging.basicConfig(
-    level=logging.INFO,
-    format="%(asctime)s [%(levelname)s] %(message)s"
+    level=logging.INFO, format="%(asctime)s [%(levelname)s] %(message)s"
 )
 logger = logging.getLogger(__name__)
 
 
 def upload_output(output: dict, mode: str, gcs_prefix: str, bucket_name: str):
-
     """
     Uploads a dictionary as a JSON file to GCS.
 
@@ -36,6 +34,6 @@ def upload_output(output: dict, mode: str, gcs_prefix: str, bucket_name: str):
     blob = client.bucket(bucket_name).blob(filename)
     blob.upload_from_string(
         json.dumps(output, ensure_ascii=False, indent=2),
-        content_type="application/json"
+        content_type="application/json",
     )
     logger.info(f"Uploaded {filename} to GCS.")

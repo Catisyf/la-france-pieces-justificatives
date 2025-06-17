@@ -1,12 +1,13 @@
 import logging
 import json
 from google.cloud import storage
+
 # basic logging config
 logging.basicConfig(
-    level=logging.INFO,
-    format="%(asctime)s [%(levelname)s] %(message)s"
+    level=logging.INFO, format="%(asctime)s [%(levelname)s] %(message)s"
 )
 logger = logging.getLogger(__name__)
+
 
 def download_collection(prefix: str, bucket_name: str):
     client = storage.Client()

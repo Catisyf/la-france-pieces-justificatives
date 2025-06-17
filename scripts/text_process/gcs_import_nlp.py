@@ -1,6 +1,7 @@
 import json
 from google.cloud import storage
 
+
 def fetch_latest_blob_from_gcs(bucket_name: str, prefix: str) -> str:
     client = storage.Client()
     bucket = client.bucket(bucket_name)
@@ -11,6 +12,7 @@ def fetch_latest_blob_from_gcs(bucket_name: str, prefix: str) -> str:
 
     latest_blob = max(blobs, key=lambda b: b.updated)
     return latest_blob.name
+
 
 def load_json_from_gcs(bucket_name, blob_path):
     client = storage.Client()

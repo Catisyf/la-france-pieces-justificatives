@@ -8,9 +8,3 @@ repos:
     rev: v0.4.4
     hooks:
       - id: ruff
-
-  - repo: https://github.com/pre-commit/mirrors-pytest
-    rev: v7.4.3
-    hooks:
-      - id: pytest
-        args: ["--quiet"]

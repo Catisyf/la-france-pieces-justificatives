@@ -4,28 +4,30 @@ import logging
 
 # basic logging config
 logging.basicConfig(
-    level=logging.INFO,
-    format="%(asctime)s [%(levelname)s] %(message)s"
+    level=logging.INFO, format="%(asctime)s [%(levelname)s] %(message)s"
 )
 logger = logging.getLogger(__name__)
 
 openai.api_key = os.getenv("OPENAI_API_KEY")
 
+
 # Format all poems into a readable string
 def format_poem_collection(poems):
     return "\n\n".join(
-        f"---\n{p['slug']}\n{p['title']}\n{p['body'].strip()}"
-        for p in poems
+        f"---\n{p['slug']}\n{p['title']}\n{p['body'].strip()}" for p in poems
     )
 
+
 # GPT prompt
-def ask_gpt(prompt: str, model: str = "gpt-4", max_tokens: int = 1500, temperature: float = 0.7) -> str:
+def ask_gpt(
+    prompt: str, model: str = "gpt-4", max_tokens: int = 1500, temperature: float = 0.7
+) -> str:
     try:
         response = openai.chat.completions.create(
             model=model,
             messages=[
                 {"role": "system", "content": "You are a thoughtful literary critic."},
-                {"role": "user", "content": prompt}
+                {"role": "user", "content": prompt},
             ],
             temperature=temperature,
             max_tokens=max_tokens,
@@ -34,9 +36,9 @@ def ask_gpt(prompt: str, model: str = "gpt-4", max_tokens: int = 1500, temperatu
     except Exception as e:
         logger.info(f"[GPT Error]: {e}")
         return f"[Error]: {str(e)}"
-    
 
-# Run 
+
+# Run
 def run_gpt_analysis(poems):
     formatted = format_poem_collection(poems)
 
@@ -69,8 +71,4 @@ def run_gpt_analysis(poems):
     """
     favorites = ask_gpt(favorites_prompt)
 
-    return {
-        "categories": categories,
-        "subtexts": subtexts,
-        "favorites": favorites
-    }
+    return {"categories": categories, "subtexts": subtexts, "favorites": favorites}
