@@ -1,0 +1,27 @@
+# Byte-compiled / cache
+__pycache__/
+*.py[cod]
+*.log
+.cache/
+
+# Virtual environments
+.venv/
+venv/
+env/
+
+# Secrets and credentials
+.env
+*.credentials.json
+*.service_account.json
+secrets/
+*.json
+
+# Git + VSCode
+.git/
+.gitignore
+.pre-commit-config.yaml
+.vscode/
+*.code-workspace
+
+# OS-specific
+.DS_Store

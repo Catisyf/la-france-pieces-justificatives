@@ -1,6 +1,5 @@
 import os
 import streamlit as st
-import openai
 import re
 from dotenv import load_dotenv
 from scripts.text_process.gcs_import import download_collection
@@ -11,7 +10,6 @@ load_dotenv()
 os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = os.getenv("GOOGLE_CLOUD_CREDS_PATH")
 BUCKET_NAME = os.getenv("GCS_BUCKET")
 GCS_PREFIX = "data/poems/"
-openai.api_key = os.getenv("OPENAI_API_KEY")
 
 THEME_EMOJIS = {
     "Existential Conundrums": "🌀",

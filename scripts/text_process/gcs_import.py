@@ -1,5 +1,4 @@
 import logging
-import os
 import json
 from google.cloud import storage
 # basic logging config

@@ -1,7 +1,6 @@
 # Python
 __pycache__/
 *.py[cod]
-*.egg-info/
 
 # Virtualenvs
 .env
@@ -20,7 +19,7 @@ logs/
 
 # Editor settings
 .vscode/
-.idea/
+*.code-workspace
 
 # macOS
 .DS_Store
@@ -28,9 +27,7 @@ logs/
 # Secrets and credentials
 secrets/
 *.json
-
-# GCP
-*.key.json
+*.credentials.json
 *.service_account.json
 
 # GitHub Actions - temp

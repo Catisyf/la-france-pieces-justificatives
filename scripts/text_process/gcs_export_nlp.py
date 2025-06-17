@@ -1,5 +1,4 @@
 import logging
-import os
 import json
 import datetime
 from google.cloud import storage

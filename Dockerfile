@@ -16,7 +16,8 @@ WORKDIR /app
 
 # ---- Copy dependency files first for better caching ----
 COPY pyproject.toml poetry.lock ./
-RUN poetry install --no-root --only main
+RUN poetry config virtualenvs.create false \ 
+    && poetry install --no-root --only main --no-cache
 
 # ---- Copy rest of the project ----
 COPY . .
@@ -25,4 +26,4 @@ COPY . .
 EXPOSE 8080
 
 # ---- Start the app ----
-CMD ["poetry", "run", "streamlit", "run", "streamlit_app.py", "--server.port=8080", "--server.address=0.0.0.0"]
+CMD ["./entrypoint.sh"]
