@@ -18,7 +18,7 @@ This is a small-scale data product MVP — and a deeply personal one. I had a lo
 - 🐳 **Docker** + 🌐 **Cloud Run** – deployment  
 
 
-## System Architecture
+## Architecture
 
 ![Pipeline Diagram](graphics/architecture.png)
 
