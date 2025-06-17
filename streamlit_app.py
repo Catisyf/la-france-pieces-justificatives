@@ -4,6 +4,7 @@ import re
 from dotenv import load_dotenv
 from scripts.text_process.gcs_import import download_collection
 from scripts.text_process.gcs_import_nlp import load_json_from_gcs, fetch_latest_blob_from_gcs
+from scripts.db.vote_storage import store_vote
 
 # === Setup ===
 load_dotenv()
@@ -168,11 +169,16 @@ with tab2:
     selected = st.multiselect(
         "**Forget the models. Trust your read**. pick up to **three** poems that spoke to you most:",
         options=list(title_lookup.keys()),
-        max_selections=3,
+        max_selections=4, # intentionally set higher to bypass Streamlit UI warning
         placeholder="Select up to 3..."
     )
 
-    if selected:
-        st.success("Thanks for voting!")
-        for title in selected:
-            st.markdown(f"- **{title}**")
+    st.markdown("💡 *After selecting a poem, scroll back to the second tab if needed — Streamlit reloads the UI each time.*")
+
+    submit = st.button("Submit Vote")
+    if submit:
+        if not selected:
+            st.warning("Please select at least one poem before submitting.")
+        else:
+            store_vote(selected)
+            st.success("Thanks for voting!")

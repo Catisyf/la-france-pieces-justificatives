@@ -29,6 +29,3 @@ secrets/
 *.json
 *.credentials.json
 *.service_account.json
-
-# GitHub Actions - temp
-.github/workflows/
